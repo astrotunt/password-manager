@@ -1,15 +1,16 @@
 from tkinter import *
 import random
 from tkinter import messagebox
+CHARS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@$%^&*()+=?1234567890'
+LENGTH_CHARS = len(CHARS)
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 def generate():
-    chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@$%^&*()+=?1234567890'
-    newpass = ""
+    new_pass = ""
     password_entry.delete(0, END)
     for _ in range(12):
-        choice = random.randint(0, len(chars) - 1)
-        newpass += chars[choice]
-    password_entry.insert(0, newpass)
+        choice = random.randint(0, LENGTH_CHARS - 1)
+        new_pass += CHARS[choice]
+    password_entry.insert(0, new_pass)
 # ---------------------------- SAVE PASSWORD ------------------------------- #
 def save_data():
     site_name = website_entry.get()
