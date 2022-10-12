@@ -67,10 +67,10 @@ logo_space.grid(row=0, column=1)
 
 website_label = Label(text="Website:", font="Arial 12 bold")
 website_label.grid(row=1, column=0, sticky="E")
-website_entry = Entry(width=42)
+website_entry = Entry(width=30)
 website_entry.focus()
-website_entry.grid(row=1, column=1, columnspan=2, sticky="W")
-search_button = Button(text="Search", command=search)
+website_entry.grid(row=1, column=1, sticky="W")
+search_button = Button(text="Search",width=15, command=search)
 search_button.grid(row=1, column=2)
 
 username_label = Label(text="Email/Username:", font="Arial 12 bold")
