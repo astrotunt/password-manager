@@ -1,6 +1,8 @@
 from tkinter import *
 import random
 from tkinter import messagebox
+import json
+
 CHARS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@$%^&*()+=?1234567890'
 LENGTH_CHARS = len(CHARS)
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
@@ -16,14 +18,43 @@ def save_data():
     site_name = website_entry.get()
     username = username_entry.get()
     password = password_entry.get()
-    is_ok = messagebox.askyesno(title=site_name, message=f"Username: {username}\nPassword: {password}\nSave this password?")
-    if is_ok == True:
+    new_data = {
+        site_name:{
+            "username": username,
+            "password": password
+        }
+    }
+    if password == '' or site_name == '' or username == '':
+        messagebox.showwarning(title="Whoops", message="Don't leave any fields blank.")
+        return
+    else:
         website_entry.delete(0, END)
         username_entry.delete(0, END)
         password_entry.delete(0, END)
-        with open("data.txt", "a") as file:
-            file.write(f"{site_name} | {username} | {password}\n")
+        try:
+            with open("data.json", "r") as file:
+                data = json.load(file)
+                data.update(new_data)
+        except FileNotFoundError:
+            with open("data.json", "w") as file:
+                json.dump(new_data, file, indent=4)
+        else:
+            with open("data.json", "w") as file:
+                json.dump(data, file, indent=4)
 
+# --------------------------SEARCH------------------------------------- #
+def search():
+    query = website_entry.get()
+    with open("data.json", "r") as file:
+        searchable_data = json.load(file)
+    try:
+        response = searchable_data[query]
+        username = response["username"]
+        password = response["password"]
+    except KeyError:
+        messagebox.showwarning(title="Whoops", message="Site not found.")
+    else:
+        messagebox.showinfo(title=f"{query}", message=f"Username: {username}\nPassword: {password}")
 # ---------------------------- UI SETUP ------------------------------- #
 
 main_window = Tk()
@@ -39,6 +70,8 @@ website_label.grid(row=1, column=0, sticky="E")
 website_entry = Entry(width=42)
 website_entry.focus()
 website_entry.grid(row=1, column=1, columnspan=2, sticky="W")
+search_button = Button(text="Search", command=search)
+search_button.grid(row=1, column=2)
 
 username_label = Label(text="Email/Username:", font="Arial 12 bold")
 username_label.grid(row=2, column=0, sticky="E")
